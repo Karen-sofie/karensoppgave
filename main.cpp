@@ -7,56 +7,59 @@
 //lister
 using namespace threepp;
 
-struct Liste : KeyListener {
-    //Liste (auto bl, auto blo): math1(bl), math2(blo){
+struct BallKontroller :KeyListener {
 
-   // }
-    //void onKeyPressed(KeyEvent evt) override
-   // {
-       // if (evt.key ==Key::SPACE) {
+    // Constructor: Takes a reference to our vector of spheres
+    BallKontroller(std::vector<std::shared_ptr<Mesh>>& baller)
+        : meshes(baller), selectedIndex(0) {
+    }
 
-
-
-          // if (amountCliked %2 ==0) {
-              //  math1->color= Color::white;
-           // }
-           // else {
-            //    math2->color= Color::green;
-            //}
-           // amountCliked++;
-
-
-        //}
-    //}
-
-   // Liste(auto bl, auto blo) : math1(bl), math2(blo) {}
-
-
-        Liste(auto bl, auto blo) : math1(bl), math2(blo) {}
 
         void onKeyPressed(KeyEvent evt) override {
-            if (evt.key == Key::SPACE)
-                {
-                index=index+1;
+        auto ball = meshes[selectedIndex];
 
-                if (index %2==0) {
-                    math1->color=Color(randomFloat(), randomFloat(), randomFloat());
+        if (evt.key == Key::TAB){
+            if (selectedIndex >= meshes.size() - 1) {
+                selectedIndex = 0;
+            } else {
+                selectedIndex = selectedIndex + 1;
+            }
 
-                }
-                else {
-                    math2->color= Color(randomFloat(), randomFloat(), randomFloat());
-                }
 
+        }
+            if (evt.key == Key::UP) {
+                ball->position.y+=0.1f;
 
 
             }
+            if (evt.key == Key::DOWN) {
+                ball->position.y-=0.1f;
+
+            }
+            if (evt.key == Key::LEFT) {
+                ball->position.x+=0.1f;
+
+            }
+            if (evt.key == Key::RIGHT) {
+                ball->position.x-=0.1f;
+
+            }
+
+
         }
+
+
+
 
     private:
     //legg til en til variabel 
         std::shared_ptr<MeshBasicMaterial> math1{};
         std::shared_ptr<MeshBasicMaterial> math2{};
         int index = 0;
+    std::shared_ptr<Mesh> baller;
+
+    std::vector<std::shared_ptr<Mesh>>& meshes;
+    int selectedIndex;
 
         // Random generator
         float randomFloat() {
@@ -68,12 +71,7 @@ struct Liste : KeyListener {
     };
 
 
-//private:
-   // std::shared_ptr<MeshBasicMaterial> math1{};
-  //  std::shared_ptr<MeshBasicMaterial> math2{};
-  //  int amountCliked = 0;
 
-//};
 int main() {
     Canvas canvas;
     GLRenderer renderer(canvas.size());
@@ -83,8 +81,7 @@ int main() {
     camera.position.z=5;
     auto LIKGEOMETRI = SphereGeometry::create(0.3);
 
-    ///auto utsende_form = Mesh::create(LIKGEOMETRI, hvordan_objekt_ser_ut);
-    //scene.add(utsende_form);
+
 
     std::vector<std::shared_ptr<Mesh>> vectorName;
 
@@ -108,27 +105,19 @@ int main() {
         scene.add(utsende_form);
     }
 
-    auto keyController = std::make_unique<Liste>(hvordan_objekt_ser_ut1, hvordan_objekt_ser_ut2);
+    auto keyController = std::make_unique<BallKontroller>(vectorName);
     canvas.addKeyListener(*keyController);
 
     float count=0.0;
     canvas.animate([&] {
      renderer.render (scene,camera);
         //utsende_form->position.y=std::sin(count);
-        for (int i=0; i <vectorName. size (); i++) {
-            if (i % 2==0) {
-                vectorName[i]->position.y=std::sin(count);
-            }
-            else {
-                vectorName [i]->position.y=-std::sin(count);
-            }
+
         }
+);
 
-        count+=0.03;
 
 
-    }
-        );
 
     return 0;
 }
