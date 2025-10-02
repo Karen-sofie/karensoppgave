@@ -35,12 +35,20 @@ struct Liste : KeyListener {
         Liste(auto bl, auto blo) : math1(bl), math2(blo) {}
 
         void onKeyPressed(KeyEvent evt) override {
-            if (evt.key == Key::SPACE) {
-                // Lag tilfeldige RGB-verdier mellom 0.0 og 1.0
-                math1->color = Color(randomFloat(), randomFloat(), randomFloat());
-//legg til en til if setning
+            if (evt.key == Key::SPACE)
+                {
+                index=index+1;
 
-                math2->color = Color(randomFloat(), randomFloat(), randomFloat());
+                if (index %2==0) {
+                    math1->color=Color(randomFloat(), randomFloat(), randomFloat());
+
+                }
+                else {
+                    math2->color= Color(randomFloat(), randomFloat(), randomFloat());
+                }
+
+
+
             }
         }
 
@@ -48,6 +56,7 @@ struct Liste : KeyListener {
     //legg til en til variabel 
         std::shared_ptr<MeshBasicMaterial> math1{};
         std::shared_ptr<MeshBasicMaterial> math2{};
+        int index = 0;
 
         // Random generator
         float randomFloat() {
